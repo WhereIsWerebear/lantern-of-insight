@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:lantern_of_insight"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Lantern of Insight" Height="350" Width="400">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBox x:Name="DeckListTextBox" Grid.Row="0" Margin="10" ScrollViewer.CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" />
+        <Button x:Name="RunScanButton" Grid.Row="1" Margin="10" Content="Run scan" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
     </Grid>
 </Window>
