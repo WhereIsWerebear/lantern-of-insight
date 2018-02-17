@@ -41,6 +41,7 @@ namespace lantern_of_insight
                 Convert.ToUInt32(buffer.Length),
                 out numBytesRead);
 
-#endif        }
+#endif
         }
+    }
 }
