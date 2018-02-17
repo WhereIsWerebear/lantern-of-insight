@@ -13,6 +13,23 @@ namespace lantern_of_insight
             IntPtr hProcess = Win32.GetProcessHandleFromHwnd(hWnd);
             Console.WriteLine($"MTGO process handle: {hProcess}");
 
+            IntPtr pSidOwner = new IntPtr();
+            IntPtr pSidGroup = new IntPtr();
+            IntPtr pDacl = new IntPtr();
+            IntPtr pSacl = new IntPtr();
+            IntPtr pSecurityDescriptor = new IntPtr();
+
+            Win32Safe.GetSecurityInfo(
+                hProcess,
+                Win32.SE_OBJECT_TYPE.SE_KERNEL_OBJECT,
+                Win32.SECURITY_INFORMATION.DACL_SECURITY_INFORMATION,
+                out pSidOwner,
+                out pSidGroup,
+                out pDacl,
+                out pSacl,
+                out pSecurityDescriptor);
+
+#if false
             const uint BUFFER_SIZE = 128;
             byte[] buffer = new byte[BUFFER_SIZE];
             IntPtr numBytesRead = new IntPtr();
@@ -23,6 +40,7 @@ namespace lantern_of_insight
                 buffer,
                 Convert.ToUInt32(buffer.Length),
                 out numBytesRead);
+
+#endif        }
         }
-    }
 }
