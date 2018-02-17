@@ -7,15 +7,18 @@ namespace lantern_of_insight
     {
         public static void RunScan()
         {
-            IntPtr hwnd = Win32.FindWindowEx(IntPtr.Zero, IntPtr.Zero, null, "Magic: The Gathering Online");
-            Console.WriteLine($"MTGO window handle: {hwnd}");
+            IntPtr hWnd = Win32.FindWindowEx(IntPtr.Zero, IntPtr.Zero, null, "Magic: The Gathering Online");
+            Console.WriteLine($"MTGO window handle: {hWnd}");
+
+            IntPtr hProcess = Win32.GetProcessHandleFromHwnd(hWnd);
+            Console.WriteLine($"MTGO process handle: {hProcess}");
 
             const uint FOUR_KILOBYTES = 4 * 1024;
             byte[] buffer = new byte[FOUR_KILOBYTES];
             IntPtr numBytesRead = new IntPtr();
 
             Win32Safe.ReadProcessMemory(
-                hwnd,
+                hProcess,
                 IntPtr.Zero,
                 buffer,
                 Convert.ToUInt32(buffer.Length),
