@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace lantern_of_insight
 {
-    class Main
+    class Scanner
     {
     }
 }
