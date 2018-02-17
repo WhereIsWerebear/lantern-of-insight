@@ -13,13 +13,13 @@ namespace lantern_of_insight
             IntPtr hProcess = Win32.GetProcessHandleFromHwnd(hWnd);
             Console.WriteLine($"MTGO process handle: {hProcess}");
 
-            const uint FOUR_KILOBYTES = 4 * 1024;
-            byte[] buffer = new byte[FOUR_KILOBYTES];
+            const uint BUFFER_SIZE = 128;
+            byte[] buffer = new byte[BUFFER_SIZE];
             IntPtr numBytesRead = new IntPtr();
 
             Win32Safe.ReadProcessMemory(
                 hProcess,
-                IntPtr.Zero,
+                new IntPtr(0x101038b0),
                 buffer,
                 Convert.ToUInt32(buffer.Length),
                 out numBytesRead);
