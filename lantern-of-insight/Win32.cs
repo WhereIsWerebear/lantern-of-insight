@@ -10,6 +10,9 @@ namespace lantern_of_insight
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+
+        [DllImport("Oleacc.dll", SetLastError = true)]
+        public static extern IntPtr GetProcessHandleFromHwnd(IntPtr hwnd);
     }
 
     class Win32Safe
