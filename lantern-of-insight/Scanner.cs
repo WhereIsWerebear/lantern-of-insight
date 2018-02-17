@@ -14,18 +14,12 @@ namespace lantern_of_insight
             byte[] buffer = new byte[FOUR_KILOBYTES];
             IntPtr numBytesRead = new IntPtr();
 
-            int readProcessMemoryReturn = Win32.ReadProcessMemory(
+            Win32Safe.ReadProcessMemory(
                 hwnd,
                 IntPtr.Zero,
                 buffer,
                 Convert.ToUInt32(buffer.Length),
                 out numBytesRead);
-
-            if (0 == readProcessMemoryReturn)
-            {
-                string errorMessage = new System.ComponentModel.Win32Exception(Marshal.GetLastWin32Error()).Message;
-                Console.WriteLine($"Error in Win32.ReadProcessMemory(): {errorMessage}");
-            }
         }
     }
 }
