@@ -8,5 +8,8 @@ namespace lantern_of_insight
 {
     class Scanner
     {
+        static void RunScan()
+        {
+        }
     }
 }
