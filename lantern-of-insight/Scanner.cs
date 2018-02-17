@@ -8,8 +8,10 @@ namespace lantern_of_insight
 {
     class Scanner
     {
-        static void RunScan()
+        public static void RunScan()
         {
+            IntPtr hwnd = Win32.FindWindowEx(IntPtr.Zero, IntPtr.Zero, null, "Magic: The Gathering Online");
+            Console.WriteLine(hwnd);
         }
     }
 }

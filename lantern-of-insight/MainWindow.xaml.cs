@@ -24,5 +24,10 @@ namespace lantern_of_insight
         {
             InitializeComponent();
         }
+
+        private void RunScanButton_Click(object sender, RoutedEventArgs e)
+        {
+            Scanner.RunScan();
+        }
     }
 }
