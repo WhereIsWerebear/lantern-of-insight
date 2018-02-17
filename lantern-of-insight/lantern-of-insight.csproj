@@ -59,6 +59,7 @@
     </ApplicationDefinition>
     <Compile Include="Scanner.cs" />
     <Compile Include="Win32.cs" />
+    <Compile Include="WinError.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
