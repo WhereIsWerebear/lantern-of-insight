@@ -31,12 +31,12 @@ namespace lantern_of_insight
             const uint ENDING_PAGE      = ENDING_ADDRESS / PAGE_SIZE;
 
             byte[] buffer       = new byte[PAGE_SIZE];
-            IntPtr numBytesRead = new IntPtr();
 
             for (uint pageNum = STARTING_PAGE; pageNum <= ENDING_PAGE; ++pageNum)
             {
                 Int64 i64BaseAddress = pageNum * PAGE_SIZE;
 
+                int numBytesRead = 0;
                 Win32Safe.ReadProcessMemory(
                     hProcess,
                     i64BaseAddress,
@@ -44,9 +44,9 @@ namespace lantern_of_insight
                     Convert.ToUInt32(buffer.Length),
                     out numBytesRead);
 
-                if (0 < numBytesRead.ToInt32())
+                if (0 < numBytesRead)
                 {
-                    Console.WriteLine("Read {numBytesRead}  bytes at address {i64BaseAddress}");
+                    Console.WriteLine("Read {numBytesRead} bytes at address {i64BaseAddress}");
                 }
             }
 
