@@ -7,7 +7,7 @@ namespace lantern_of_insight
     class Win32
     {
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern Int32 ReadProcessMemory(IntPtr hProcess, Int64 lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesRead);
+        public static extern Int32 ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesRead);
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
@@ -75,7 +75,7 @@ namespace lantern_of_insight
 
     class Win32Safe
     {
-        public static void ReadProcessMemory(IntPtr hProcess, Int64 lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesRead)
+        public static void ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [In, Out] byte[] buffer, UInt32 size, out int lpNumberOfBytesRead)
         {
             int readProcessMemoryReturn = Win32.ReadProcessMemory(
                 hProcess,
