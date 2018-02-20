@@ -7,7 +7,7 @@ namespace lantern_of_insight
     {
         public static void RunScan()
         {
-            IntPtr hWnd = Win32.FindWindowEx(IntPtr.Zero, IntPtr.Zero, null, "Untitled - Notepad");// "Magic: The Gathering Online");
+            IntPtr hWnd = Win32.FindWindowEx(IntPtr.Zero, IntPtr.Zero, null, "Magic: The Gathering Online");
             Console.WriteLine($"MTGO window handle: {hWnd}");
 
             uint processId = 0;
@@ -18,23 +18,6 @@ namespace lantern_of_insight
             IntPtr hProcess = Win32.OpenProcess(Win32.ProcessAccessFlags.All, false, Convert.ToInt32(processId));
             Console.WriteLine($"MTGO process handle: {hProcess}");
 
-#if false
-            IntPtr pSidOwner = new IntPtr();
-            IntPtr pSidGroup = new IntPtr();
-            IntPtr pDacl = new IntPtr();
-            IntPtr pSacl = new IntPtr();
-            IntPtr pSecurityDescriptor = new IntPtr();
-
-            Win32Safe.GetSecurityInfo(
-                hProcess,
-                Win32.SE_OBJECT_TYPE.SE_KERNEL_OBJECT,
-                Win32.SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
-                out pSidOwner,
-                out pSidGroup,
-                out pDacl,
-                out pSacl,
-                out pSecurityDescriptor);
-#else
             const uint BUFFER_SIZE = 128;
             byte[] buffer = new byte[BUFFER_SIZE];
             IntPtr numBytesRead = new IntPtr();
@@ -45,7 +28,6 @@ namespace lantern_of_insight
                 buffer,
                 Convert.ToUInt32(buffer.Length),
                 out numBytesRead);
-#endif
         }
     }
 }
