@@ -30,7 +30,6 @@ namespace lantern_of_insight
             const uint STARTING_PAGE    = STARTING_ADDRESS / PAGE_SIZE;
             const uint ENDING_PAGE      = ENDING_ADDRESS / PAGE_SIZE;
 
-
             byte[] buffer       = new byte[PAGE_SIZE];
             IntPtr numBytesRead = new IntPtr();
 
