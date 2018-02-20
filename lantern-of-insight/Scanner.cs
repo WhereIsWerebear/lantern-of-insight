@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace lantern_of_insight
@@ -30,16 +31,24 @@ namespace lantern_of_insight
             const uint STARTING_PAGE    = STARTING_ADDRESS / PAGE_SIZE;
             const uint ENDING_PAGE      = ENDING_ADDRESS / PAGE_SIZE;
 
-            byte[] buffer       = new byte[PAGE_SIZE];
+            byte[] buffer = new byte[PAGE_SIZE];
 
             for (uint pageNum = STARTING_PAGE; pageNum <= ENDING_PAGE; ++pageNum)
             {
-                Int64 i64BaseAddress = pageNum * PAGE_SIZE;
+#if DEBUG
+                // Sanity check that we are calculating only 32-bit addresses.
+                UInt64 u64PageNum     = pageNum;
+                UInt64 u64PageSize    = PAGE_SIZE;
+                UInt64 u64BaseAddress = u64PageNum * u64PageSize;
+                Debug.Assert(u64BaseAddress == Convert.ToUInt32(u64BaseAddress));
+#endif
+
+                IntPtr ipBaseAddress = new IntPtr(pageNum * PAGE_SIZE);
 
                 int numBytesRead = 0;
                 Win32Safe.ReadProcessMemory(
                     hProcess,
-                    i64BaseAddress,
+                    ipBaseAddress,
                     buffer,
                     Convert.ToUInt32(buffer.Length),
                     out numBytesRead);
