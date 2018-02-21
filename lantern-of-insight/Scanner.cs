@@ -8,7 +8,6 @@ namespace lantern_of_insight
     class Scanner
     {
         const uint PAGE_SIZE = 4 * 1024;
-        static byte[] Buffer = new byte[PAGE_SIZE];
         static IntPtr ProcessHandle = IntPtr.Zero;
 
         public static void RunScan()
@@ -26,71 +25,62 @@ namespace lantern_of_insight
 
             // MTGO seems to only use 2 GB of memory, so we can stop at address
             // 0x80000000.
-            const uint STARTING_ADDRESS = 0x0;
             const uint ENDING_ADDRESS = 0x80000000;
-            const uint STARTING_PAGE_NUM = STARTING_ADDRESS / PAGE_SIZE;
             const uint ENDING_PAGE_NUM = ENDING_ADDRESS / PAGE_SIZE;
 
+            byte[] buffer = new byte[PAGE_SIZE];
+            uint startingPageNum = 0;
+            for (uint pageNum = 0; pageNum < ENDING_PAGE_NUM; ++pageNum)
             {
-                uint leftPageNum = STARTING_PAGE_NUM;
-                uint rightPageNum = ENDING_PAGE_NUM;
-
-                while (true)
+                if (0 < ReadPageIntoBuffer(pageNum, ref buffer))
                 {
-                    uint pivotPageNum = (rightPageNum - leftPageNum) / 2;
-                    uint prevPageNum = pivotPageNum - 1;
-
-                    bool pivotPageIsReadable = IsPageReadable(pivotPageNum);
-                    bool prevPageIsReadable = IsPageReadable(prevPageNum);
-
-                    if (pivotPageIsReadable && !prevPageIsReadable)
-                    {
-                        // Success
-                        return pivotPageNum;
-                    }
-                    else if (pivotPageIsReadable && prevPageIsReadable)
-                    {
-                        rightPageNum = pivotPageNum;
-                    }
-                    else if (!pivotPageIsReadable)
+                    startingPageNum = pageNum;
+                    break;
                 }
             }
 
-            for (uint pageNum = STARTING_PAGE; pageNum <= ENDING_PAGE; ++pageNum)
+            for (uint pageNum = startingPageNum; pageNum < ENDING_PAGE_NUM; ++pageNum)
             {
+                int numBytesRead = ReadPageIntoBuffer(pageNum, ref buffer);
 
-                Console.WriteLine("Read {numBytesRead} bytes at address {ipBaseAddress}");
+                if (0 == numBytesRead)
+                {
+                    Console.WriteLine($"Reached page {pageNum} which could not be read.  Stopping reading from memory.");
+                    break;
+                }
+
+                Console.WriteLine($"Read {numBytesRead} bytes at page {pageNum}.");
             }
         }
 
-        static bool IsPageReadable(uint pageNum)
+        static int ReadPageIntoBuffer(uint pageNum, ref byte[] buffer)
         {
 #if DEBUG
             // Sanity check that we are calculating only 32-bit addresses.
-            UInt64 u64BaseAddress =
-                Convert.ToUInt64(pageNum)
-                * Convert.ToUInt64(PAGE_SIZE);
+            Int64 i64BaseAddress =
+                Convert.ToInt64(pageNum)
+                * Convert.ToInt64(PAGE_SIZE);
 
-            Debug.Assert(u64BaseAddress == Convert.ToUInt32(u64BaseAddress));
+            Debug.Assert(i64BaseAddress == Convert.ToInt32(i64BaseAddress));
 #endif
 
-            try
+            IntPtr ipBaseAddress = new IntPtr(pageNum * PAGE_SIZE);
+            int numBytesRead = 0;
+
+            int returnCode = Win32.ReadProcessMemory(
+                ProcessHandle,
+                ipBaseAddress,
+                buffer,
+                Convert.ToUInt32(buffer.Length),
+                out numBytesRead);
+
+            if (0 == returnCode)
             {
-                IntPtr ipBaseAddress = new IntPtr(pageNum * PAGE_SIZE);
-                int numBytesRead = 0;
-
-                Win32Safe.ReadProcessMemory(
-                    ProcessHandle,
-                    ipBaseAddress,
-                    Buffer,
-                    Convert.ToUInt32(Buffer.Length),
-                    out numBytesRead);
-
-                return true;
+                return 0;
             }
-            catch (System.ComponentModel.Win32Exception e)
+            else
             {
-                return false;
+                return numBytesRead;
             }
         }
     }
